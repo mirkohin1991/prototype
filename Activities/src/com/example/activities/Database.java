@@ -13,19 +13,33 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class DatabaseInteraction {
+public class Database {
 	
 
-	private DatabaseManager mHelper;
-	private SQLiteDatabase mDatabase;
-	private int currentRouteID = 1 ;
+	private static DatabaseManager mHelper;
+	private static SQLiteDatabase mDatabase;
+	private static int currentRouteID = 1 ;
+	
+	private static Database db_data = null;
+	
+
+	
 	
 	
 	 // In welchem Kontext???
-	public DatabaseInteraction(Context context) {
+	
+	private Database(Context context) {
 		
 		mHelper = new DatabaseManager (context);	
 	}
+	
+	
+
+    public static Database getInstance(Context context){
+        if (db_data == null)
+            db_data = new Database(context);
+        return db_data;
+    }
 
 
 	public void closeDBsession () {
@@ -35,7 +49,7 @@ public class DatabaseInteraction {
 	
 	
 	//Irgendwie noch abfangen ob es eine neue Route ist!
-	public boolean addNewRoutePoint (String picture, double latitude, double longitude, String name) {
+	public static boolean addNewRoutePoint (String picture, double latitude, double longitude, String name) {
 		
 	
 	   
@@ -90,7 +104,7 @@ public class DatabaseInteraction {
 
 
 
-	private int getIDlastRoute() {
+	private static int getIDlastRoute() {
 		
 		Cursor db_cursor;
 		String[] db_columns = {"_ID"};
@@ -208,7 +222,7 @@ public class DatabaseInteraction {
 	
 	// "1 - n routpoints can be selected"
 	//Select needs the values as string and not int
-	public List<RoutePoint> getSpecificRoute (String[] ids) {
+	public static List<RoutePoint> getSpecificRoute (String[] ids) {
 		
 		
 		List<RoutePoint> allRoutes  = new ArrayList <RoutePoint> () ;
@@ -256,7 +270,7 @@ public class DatabaseInteraction {
 	
 	
 	//TEST
-	public List<String> getAllRoutesSpecificColumn ( ) {
+	public static List<String> getAllRoutesSpecificColumn ( ) {
 		
 		
 		
@@ -293,7 +307,7 @@ public class DatabaseInteraction {
 	
 	
 	
-	public List<RoutePoint> getRoutePoint (int id){
+	public static List<RoutePoint> getRoutePoint (int id){
 		
 		 List<RoutePoint> route = new ArrayList <RoutePoint> () ;
 		 
@@ -342,13 +356,13 @@ public class DatabaseInteraction {
 
 
 	
-	public int getCurrentRouteID() {
+	public static int getCurrentRouteID() {
 		return currentRouteID;
 	}
 
 	
     //EVERY TIME A NEW ROUTE IS STARTET THIS METHOD HAS TO BE CALLED
-	public void registerNewRouteID() {
+	public static void registerNewRouteID() {
 		
 		// -1 means first route ever tracked
 		if ( getIDlastRoute() != -1 ) {

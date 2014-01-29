@@ -20,7 +20,7 @@ import android.widget.FrameLayout;
 public class KameraActivity extends Activity {
 	
 	
-	public DatabaseInteraction db_data;
+	
 	
 	
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
@@ -33,7 +33,9 @@ public class KameraActivity extends Activity {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.kamera_activity);
 	        
-	        db_data = new DatabaseInteraction(this);
+	       
+	        
+	      //  db_data = new DatabaseInteraction(this);
 
 	     // create Intent to take a picture and return control to the calling application
 	        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -90,7 +92,7 @@ public class KameraActivity extends Activity {
 			if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 				GPSTracker gps = new GPSTracker(KameraActivity.this);
 			      if(gps.canGetLocation()){
-			            db_data.addNewRoutePoint(fileUri.toString(), gps.getLatitude() + 0.2, gps.getLongitude(), "Wanderung");
+			            Database.addNewRoutePoint(fileUri.toString(), gps.getLatitude() + 0.2, gps.getLongitude(), "Wanderung");
 			    		ImageSpot neuesBild = new ImageSpot(gps.getLongitude(), gps.getLatitude(), fileUri.toString(), timeStamp);
 						Intent mapIntent = new Intent(this, UnterActivity.class);
 						mapIntent.putExtra("ImgLatitude", neuesBild.getLatitude());
